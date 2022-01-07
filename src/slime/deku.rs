@@ -63,9 +63,25 @@ pub enum PacketType {
     #[deku(id = "3")]
     Handshake {
         packet_id: u64,
-        board: i32,
-        imu: i32,
-        mcu_type: i32,
+        board: i8,
+        imu: i8,
+        mcu_type: i8,
+        imu_info: (i32, i32, i32),
+        build: i32,
+        firmware: SlimeString,
+        mac_address: [u8; 6],
+    },
+    #[deku(id = "16")]
+    Rotation2 {
+        packet_id: u64,
+        quat: SlimeQuaternion,
+    },
+    #[deku(id = "15")]
+    Handshake2 {
+        packet_id: u64,
+        board: i8,
+        imu: i8,
+        mcu_type: i8,
         imu_info: (i32, i32, i32),
         build: i32,
         firmware: SlimeString,

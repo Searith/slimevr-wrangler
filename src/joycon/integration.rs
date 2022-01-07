@@ -61,18 +61,32 @@ fn parse_message(msg: ChannelInfo, devices: &mut HashMap<String, Device>, addres
         ChannelInfo::Connected(device_info) => {
             let serial = device_info.serial_number.clone();
             let handshake = PacketType::Handshake {
-                packet_id: 1,
-                board: 0,
-                imu: 0,
-                mcu_type: 0,
-                imu_info: (0, 0, 0),
-                build: 0,
+                packet_id: 3,
+                board: 1,
+                imu: 1,
+                mcu_type: 1,
+                imu_info: (1, 1, 1),
+                build: 1,
+                firmware: "slimevr-wrangler".to_string().into(),
+                mac_address: serial_number_to_mac(&serial),
+            }; 
+            let handshake2 = PacketType::Handshake2 {
+                packet_id: 3,
+                board: 1,
+                imu: 1,
+                mcu_type: 1,
+                imu_info: (1, 1, 1),
+                build: 1,
                 firmware: "slimevr-wrangler".to_string().into(),
                 mac_address: serial_number_to_mac(&serial),
             };
             let socket = UdpSocket::bind("0.0.0.0:0").unwrap();
             socket
                 .send_to(&handshake.to_bytes().unwrap(), address)
+                .unwrap();
+            let socket2 = UdpSocket::bind("0.0.0.0:0").unwrap();
+            socket2
+                .send_to(&handshake2.to_bytes().unwrap(), address)
                 .unwrap();
             devices.insert(
                 serial,
