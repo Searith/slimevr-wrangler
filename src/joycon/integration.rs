@@ -81,13 +81,21 @@ fn parse_message(msg: ChannelInfo, devices: &mut HashMap<String, Device>, addres
                 mac_address: serial_number_to_mac(&serial),
             };
             let socket = UdpSocket::bind("0.0.0.0:0").unwrap();
+            let socket2 = UdpSocket::bind("0.0.0.0:0").unwrap();
+            println!("{}", &serial);
+            if &serial == "JOYCON2SERIAL"{
             socket
                 .send_to(&handshake.to_bytes().unwrap(), address)
                 .unwrap();
-            let socket2 = UdpSocket::bind("0.0.0.0:0").unwrap();
-            socket2
-                .send_to(&handshake2.to_bytes().unwrap(), address)
-                .unwrap();
+            } else if &serial == "JOYCON3SERIAL"{
+                socket
+                    .send_to(&handshake.to_bytes().unwrap(), address)
+                    .unwrap();
+            } else {
+                socket2
+                    .send_to(&handshake2.to_bytes().unwrap(), address)
+                    .unwrap();
+            }
             devices.insert(
                 serial,
                 Device {
@@ -106,15 +114,39 @@ fn parse_message(msg: ChannelInfo, devices: &mut HashMap<String, Device>, addres
             Some(device) => {
                 device.imu.update(data.axis_data);
                 device.battery_level = data.battery_level;
-
-                let rotation = PacketType::Rotation {
-                    packet_id: 1,
-                    quat: (*device.imu.rotation.clone()).into(),
-                };
-
-                device
-                    .socket
-                    .send_to(&rotation.to_bytes().unwrap(), address)
+                let mut rotation = PacketType::Rotation {
+                        packet_id: 1,
+                        quat: (*device.imu.rotation.clone()).into(),
+                    };
+                if &data.serial_number == "JOYCON2SERIAL" {
+                    rotation = PacketType::Rotation {
+                        packet_id: 1,
+                        quat: (*device.imu.rotation.clone()).into(),
+                    };
+                } else if &data.serial_number == "JOYCON1SERIAL"{
+                    rotation = PacketType::Rotation {
+                        packet_id: 1,
+                        quat: (*device.imu.rotation.clone()).into(),
+                    };
+                } else {
+                    rotation = PacketType::Rotation2 {
+                        packet_id: 1,
+                        quat: (*device.imu.rotation.clone()).into(),
+                    };
+                }
+                    if &data.serial_number == "JOYCON1SERIAL"{
+                            device
+                        .socket
+                        .send_to(&rotation.to_bytes().unwrap(), "PORTFORWARDIP:6969")
+                    } else if &data.serial_number == "JOYCON2SERIAL" {
+                            device
+                        .socket
+                        .send_to(&rotation.to_bytes().unwrap(), "PORTFORWARDIP:6969")
+                    } else {
+                            device
+                        .socket
+                        .send_to(&rotation.to_bytes().unwrap(), "127.0.0.1:6969")
+                    }
                     .unwrap();
             }
             None => (),
