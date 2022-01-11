@@ -31,7 +31,7 @@ You can also play around with different ways of mounting the joycon, with differ
 
 ### Right joycon
 
-The one I'm borrowing seems to be broken, so I can't try using it. Sorry. You'll have to figure it out yourself.
+Same with left Joycon but the joystick faces backwards.
 
 ## Issues
 
