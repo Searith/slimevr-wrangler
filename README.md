@@ -15,6 +15,11 @@ You need bluetooth on your computer.
 * Make sure the SlimeVR server is running, then press "Search for Joycons" inside SlimeVR Wrangler
 * If you're lucky the Joycon should show up in the window!
 * Follow the SlimeVR documentation to set up the new tracker, with the direction below:
+* To use more than 2 joycons you must have a local IP that is port forwarding to your computers local IP on port 6969, try a phone with Fwd. Fwd might not be on Iphones so an alternative might be required.
+* For more than 1 Joycon you must change the variables in src/joycon/integration.rs
+* Variables that you need to change are JOYCON1SERIAL JOYCON2SERIAL JOYCON3SERIAL PORTFORWARDIP
+* To connect joycons to the slime vr server you must open this with the IP setting set to local IP, connect your joycons, close out, set IP to the port forwarded IP, then connect your joycons again.
+* Joycons may disconnect, might just be my bad bluetooth
 
 ### Left joycon
 
